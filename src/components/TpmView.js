@@ -3,10 +3,12 @@ import { useDispatch } from "react-redux";
 import { updateTutorial, deleteTutorial } from "../slices/tutorials";
 import TutorialDataService from "../services/TutorialService";
 
-const Tutorial = (props) => {
+const TpmView = (props) => {
   const initialTutorialState = {
     id: null,
     title: "",
+    jiraLink: "",
+    targetedBranch: "",
     description: "",
     published: false
   };
@@ -38,6 +40,8 @@ const Tutorial = (props) => {
     const data = {
       id: currentTutorial.id,
       title: currentTutorial.title,
+      jiraLink: currentTutorial.jiraLink,
+      targetedBranch: currentTutorial.targetedBranch,
       description: currentTutorial.description,
       published: status
     };
@@ -95,6 +99,28 @@ const Tutorial = (props) => {
               />
             </div>
             <div className="form-group">
+              <label htmlFor="jiraLink">Jira Link</label>
+              <input
+                type="text"
+                className="form-control"
+                id="jiraLink"
+                name="jiraLink"
+                value={currentTutorial.jiraLink}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="targetedBranch">Targeted Branch</label>
+              <input
+                type="text"
+                className="form-control"
+                id="targetedBranch"
+                name="TargetedBranch"
+                value={currentTutorial.targetedBranch}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
               <label htmlFor="description">Description</label>
               <input
                 type="text"
@@ -105,52 +131,33 @@ const Tutorial = (props) => {
                 onChange={handleInputChange}
               />
             </div>
-
-            <div className="form-group">
-              <label>
-                <strong>Status:</strong>
-              </label>
-              {currentTutorial.published ? "Published" : "Pending"}
-            </div>
           </form>
-
           {currentTutorial.published ? (
             <button
               className="badge badge-primary mr-2"
               onClick={() => updateStatus(false)}
             >
-              UnPublish
+              Dis Approve
             </button>
           ) : (
             <button
               className="badge badge-primary mr-2"
               onClick={() => updateStatus(true)}
             >
-              Publish
+              Approve
             </button>
           )}
-
-          <button className="badge badge-danger mr-2" onClick={removeTutorial}>
-            Delete
-          </button>
-
-          <button
-            type="submit"
-            className="badge badge-success"
-            onClick={updateContent}
-          >
-            Update
-          </button>
+          
           <p>{message}</p>
         </div>
       ) : (
         <div>
           <br />
-          <p>Please click on a Tutorial...</p>
+          <p>Please click on a Request...</p>
         </div>
       )}
     </div>
   );
 };
 
-export default Tutorial;
+export default TpmView;

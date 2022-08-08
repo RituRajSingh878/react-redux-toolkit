@@ -5,8 +5,8 @@ const initialState = [];
 
 export const createTutorial = createAsyncThunk(
   "tutorials/create",
-  async ({ title, description }) => {
-    const res = await TutorialDataService.create({ title, description });
+  async ({ title, description, jiraLink, targetedBranch, message}) => {
+    const res = await TutorialDataService.create({ title, description, jiraLink, targetedBranch, message });
     return res.data;
   }
 );

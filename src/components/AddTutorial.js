@@ -7,7 +7,10 @@ const AddTutorial = () => {
     id: null,
     title: "",
     description: "",
-    published: false
+    jiraLink: "",
+    targetedBranch: "",
+    published: false,
+    message: []
   };
   const [tutorial, setTutorial] = useState(initialTutorialState);
   const [submitted, setSubmitted] = useState(false);
@@ -20,9 +23,9 @@ const AddTutorial = () => {
   };
 
   const saveTutorial = () => {
-    const { title, description } = tutorial;
+    const { title, description, jiraLink, targetedBranch, message } = tutorial;
 
-    dispatch(createTutorial({ title, description }))
+    dispatch(createTutorial({ title, description, jiraLink, targetedBranch, message }))
       .unwrap()
       .then(data => {
         console.log(data);
@@ -30,7 +33,10 @@ const AddTutorial = () => {
           id: data.id,
           title: data.title,
           description: data.description,
-          published: data.published
+          jiraLink: data.jiraLink,
+          targetedBranch: data.targetedBranch,
+          published: data.published,
+          message: data.message
         });
         setSubmitted(true);
       })
@@ -78,6 +84,32 @@ const AddTutorial = () => {
               value={tutorial.description || ''}
               onChange={handleInputChange}
               name="description"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="jiraLink">Jira Link</label>
+            <input
+              type="text"
+              className="form-control"
+              id="jiraLink"
+              required
+              value={tutorial.jiraLink || ''}
+              onChange={handleInputChange}
+              name="jiraLink"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="targetedBranch">Target Branch</label>
+            <input
+              type="text"
+              className="form-control"
+              id="targetedBranch"
+              required
+              value={tutorial.targetedBranch || ''}
+              onChange={handleInputChange}
+              name="targetedBranch"
             />
           </div>
 

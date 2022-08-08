@@ -9,6 +9,7 @@ const get = id => {
 };
 
 const create = data => {
+  console.log(data);
   return http.post("/tutorials", data);
 };
 
