@@ -4,6 +4,7 @@ import {
   retrieveTutorials,
   findTutorialsByTitle,
   deleteAllTutorials,
+  notifyTutorial
 } from "../slices/tutorials";
 import { Link } from "react-router-dom";
 import { type } from "os";
@@ -33,6 +34,18 @@ const TpmList = () => {
     const searchTitle = e.target.value;
     setSearchTitle(searchTitle);
   };
+
+  const notify = (data) => {
+
+    dispatch(notifyTutorial(data))
+      .then(response => {
+        console.log(response);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
 
   const initFetch = useCallback(() => {
     dispatch(retrieveTutorials());
@@ -69,9 +82,9 @@ const TpmList = () => {
   };
 
   return (
-    <div className="row">
+    <div className="col" >
      
-      <div className="col-md-8">
+      <div style={{justifyContent:'center', alignItems:'center'}} >
         <div className="input-group mb-3">
           <input
             type="text"
@@ -92,6 +105,7 @@ const TpmList = () => {
         </div>
       </div>
  
+      <div className="row">
       <div class="col-xl-6 col-md-6">
       <div class="Recent-Users card">
         <div class="card-header">
@@ -131,14 +145,21 @@ const TpmList = () => {
                   </h6>
                 </td>
                 <td>
+                  <h6 class="mb-1">
+                  <a href={tutorial.prLink}>Pull Request Link</a>
+                  
+                  </h6>
+                </td>
+                <td>
                 <Link
                     to={"/tpm/" + tutorial.id}
                     className="label theme-bg text-white f-12"
                   >
-                    Approve
+                    Review
                   </Link>
                   
                 </td>
+
               </tr>
             ))}
             
@@ -154,7 +175,7 @@ const TpmList = () => {
       <div class="Recent-Users card">
         <div class="card-header">
           <h5 class="card-title">
-            Recently Approved
+            Recently Reviewed
           </h5>
         </div>
         <div className="px-0 py-2 card-body">
@@ -172,20 +193,31 @@ const TpmList = () => {
               >
                 <td>
                   <h6 class="mb-1">
-                  {tutorial.title}
+                  {"Id: "+tutorial.title}
                   </h6>
                 </td>
 
                 <td>
                   <h6 class="mb-1">
                   <i class="fa fa-circle text-c-green f-10 m-r-15"></i>
-                  {tutorial.targetedBranch}
+                  {"Targeted Branch:"+tutorial.targetedBranch}
                   </h6>
                 </td>
                 <td>
                   <h6 class="mb-1">
                   <a href={tutorial.jiraLink}>Jira Link</a>
                   
+                  </h6>
+                </td>
+                <td>
+                  <h6 class="mb-1">
+                  <a href={tutorial.prLink}>Pull Request Link</a>
+                  
+                  </h6>
+                </td>
+                <td>
+                  <h6 class="mb-1">
+                  {(tutorial.accepted?"Approved":"Declined")}
                   </h6>
                 </td>
                 <td>
@@ -206,6 +238,8 @@ const TpmList = () => {
     </div>
     </div>
       </div>  
+
+      </div>
       
     </div>
   );

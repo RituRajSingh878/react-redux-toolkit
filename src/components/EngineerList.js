@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { type } from "os";
 import '../assets/css/style.css';
 
+
 const EngineerList = () => {
   const [currentTutorial, setCurrentTutorial] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -69,9 +70,10 @@ const EngineerList = () => {
   };
 
   return (
-    <div className="row">
+   <div className="col">
+  
      
-      <div className="col-md-8">
+      <div style={{justifyContent:'center', alignItems:'center'}}>
         <div className="input-group mb-3">
           <input
             type="text"
@@ -92,11 +94,12 @@ const EngineerList = () => {
         </div>
       </div>
  
+      <div className="row">
       <div class="col-xl-6 col-md-6">
       <div class="Recent-Users card">
         <div class="card-header">
           <h5 class="card-title">
-            Approved
+            Recent Review
           </h5>
         </div>
         <div className="px-0 py-2 card-body">
@@ -130,6 +133,20 @@ const EngineerList = () => {
                   
                   </h6>
                 </td>
+
+                <td>
+                  <h6 class="mb-1">
+                  <a href={tutorial.prLink}>Pull Request Link</a>
+                  
+                  </h6>
+                </td>
+
+                <td>
+                  <h6 class="mb-1">
+                  <i class="fa fa-circle text-c-green f-10 m-r-15"></i>
+                  {(tutorial.accepted?"Approved":"Declined")}
+                  </h6>
+                </td>
                 
                 <td>
                 <Link
@@ -157,7 +174,7 @@ const EngineerList = () => {
       <div class="Recent-Users card">
         <div class="card-header">
           <h5 class="card-title">
-            Requested
+            Recently Requested
           </h5>
         </div>
         <div className="px-0 py-2 card-body">
@@ -192,11 +209,17 @@ const EngineerList = () => {
                   </h6>
                 </td>
                 <td>
+                  <h6 class="mb-1">
+                  <a href={tutorial.prLink}>Pull Request Link</a>
+                  
+                  </h6>
+                </td>
+                <td>
                 <Link
                     to={"/engineer/" + tutorial.id}
                     className="label theme-bg2 text-white f-12"
                   >
-                    View
+                    Update
                   </Link>
                   
                 </td>
@@ -209,6 +232,7 @@ const EngineerList = () => {
     </div>
     </div>
       </div>
+    </div>
     </div>
   );
 };

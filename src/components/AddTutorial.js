@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createTutorial } from "../slices/tutorials";
+import { Link } from "react-router-dom";
 
 const AddTutorial = () => {
   const initialTutorialState = {
@@ -8,6 +9,7 @@ const AddTutorial = () => {
     title: "",
     description: "",
     jiraLink: "",
+    prLink: "",
     targetedBranch: "",
     published: false,
     message: []
@@ -23,9 +25,9 @@ const AddTutorial = () => {
   };
 
   const saveTutorial = () => {
-    const { title, description, jiraLink, targetedBranch, message } = tutorial;
+    const { title, description, jiraLink, prLink, targetedBranch, message } = tutorial;
 
-    dispatch(createTutorial({ title, description, jiraLink, targetedBranch, message }))
+    dispatch(createTutorial({ title, description, jiraLink, prLink, targetedBranch, message }))
       .unwrap()
       .then(data => {
         console.log(data);
@@ -34,6 +36,7 @@ const AddTutorial = () => {
           title: data.title,
           description: data.description,
           jiraLink: data.jiraLink,
+          prLink: data.prLink,
           targetedBranch: data.targetedBranch,
           published: data.published,
           message: data.message
@@ -55,9 +58,12 @@ const AddTutorial = () => {
       {submitted ? (
         <div>
           <h4>You submitted successfully!</h4>
-          <button className="btn btn-success" onClick={newTutorial}>
-            Add
-          </button>
+          <Link
+                to={"/engineer/"}
+                    className="label theme-bg text-white f-12"
+                  >
+                    Okay
+            </Link>
         </div>
       ) : (
         <div>
@@ -97,6 +103,19 @@ const AddTutorial = () => {
               value={tutorial.jiraLink || ''}
               onChange={handleInputChange}
               name="jiraLink"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="prLink">Pull Request Link</label>
+            <input
+              type="text"
+              className="form-control"
+              id="prLink"
+              required
+              value={tutorial.prLink || ''}
+              onChange={handleInputChange}
+              name="prLink"
             />
           </div>
 

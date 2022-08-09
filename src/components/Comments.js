@@ -1,27 +1,35 @@
 import React from 'react'
 import { CommentSection} from 'react-comments-section'
+import { useDispatch } from "react-redux";
+import { updateTutorial} from "../slices/tutorials";
 import 'react-comments-section/dist/index.css'
 
-const DefaultComponent = () => {
-  const data =[
-    {
-      userId: '02b',
-      comId: '017',
-      fullName: 'Lily',
-      userProfile: 'https://www.linkedin.com/in/riya-negi-8879631a9/',
-      text: 'I think you have a point🤔',
-      avatarUrl: 'https://ui-avatars.com/api/name=Lily&background=random',
-      replies: []
-    }
-  ]
+const DefaultComponent = (props) => {
+  
+    console.log(props.tutorial);
+    
+    const data = props.tutorial.message;
+    
+    const dispatch = useDispatch();
+    const updateContent = () => {
+        dispatch(updateTutorial({ id: props.tutorial.id, data: props.tutorial }))
+          .unwrap()
+          .then(response => {
+            console.log(response);
+            
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      };
+
+
   return <CommentSection
         currentUser={{
-          currentUserId: '01a',
-          currentUserImg:
-            'https://ui-avatars.com/api/name=Riya&background=random',
-          currentUserProfile:
-            'https://www.linkedin.com/in/riya-negi-8879631a9/',
-          currentUserFullName: 'Engineer'
+          currentUserId: (props.view==="Engineer"?"01a":"01b"),
+          currentUserImg: (props.view==="Engineer"?'https://ui-avatars.com/api/name=Riya&background=random':'https://ui-avatars.com/api/name=Lily&background=random'),
+          currentUserProfile: 'https://www.linkedin.com/in/riya-negi-8879631a9/',
+          currentUserFullName: (props.view==="Engineer"?"Engineer":"Tpm")
         }}
         
         commentData={data}
@@ -29,7 +37,10 @@ const DefaultComponent = () => {
         ) => console.log('check submit, ', data)}
         currentData={(data) => {
           console.log('curent data', data)
+          props.tutorial.message = data
+          updateContent();
         }}
+        
       />
 }
 
