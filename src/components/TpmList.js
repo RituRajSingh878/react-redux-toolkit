@@ -4,6 +4,7 @@ import {
   retrieveTutorials,
   findTutorialsByTitle,
   deleteAllTutorials,
+  notifyTutorial
 } from "../slices/tutorials";
 import { Link } from "react-router-dom";
 import { type } from "os";
@@ -33,6 +34,18 @@ const TpmList = () => {
     const searchTitle = e.target.value;
     setSearchTitle(searchTitle);
   };
+
+  const notify = (data) => {
+
+    dispatch(notifyTutorial(data))
+      .then(response => {
+        console.log(response);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
 
   const initFetch = useCallback(() => {
     dispatch(retrieveTutorials());
@@ -71,7 +84,7 @@ const TpmList = () => {
   return (
     <div className="row">
      
-      <div className="col-md-8">
+      <div className="col-md-7">
         <div className="input-group mb-3">
           <input
             type="text"
@@ -96,68 +109,7 @@ const TpmList = () => {
       <div class="Recent-Users card">
         <div class="card-header">
           <h5 class="card-title">
-            Approved
-          </h5>
-        </div>
-        <div className="px-0 py-2 card-body">
-        <div className="table-responsive">
-          <table class="table">
-            <tbody>
-            {approvedTutorials &&
-            approvedTutorials.map((tutorial, index) => (
-              <tr
-                className={
-                  (index === currentIndex && currentType === "approved" ? "tableSelected" : "")
-                }
-                onClick={() => setActiveTutorial(tutorial, index, "approved")}
-                key={index}
-              >
-                <td>
-                  <h6 class="mb-1">
-                  {tutorial.title}
-                  </h6>
-                </td>
-
-                <td>
-                  <h6 class="mb-1">
-                  <i class="fa fa-circle text-c-green f-10 m-r-15"></i>
-                  {tutorial.targetedBranch}
-                  </h6>
-                </td>
-                <td>
-                  <h6 class="mb-1">
-                  <a href={tutorial.jiraLink}>Jira Link</a>
-                  
-                  </h6>
-                </td>
-                
-                <td>
-                <Link
-                    to={"/tpm/" + tutorial.id}
-                    className="label theme-bg2 text-white f-12"
-                  >
-                    View
-                  </Link>
-                  
-                </td>
-              </tr>
-            ))}
-            
-          </tbody>
-        </table>
-      </div>
-    </div>
-    </div>
-      </div> 
-
-
-
-
-      <div class="col-xl-6 col-md-6">
-      <div class="Recent-Users card">
-        <div class="card-header">
-          <h5 class="card-title">
-            Requested
+            Recent Request
           </h5>
         </div>
         <div className="px-0 py-2 card-body">
@@ -194,6 +146,71 @@ const TpmList = () => {
                 <td>
                 <Link
                     to={"/tpm/" + tutorial.id}
+                    className="label theme-bg text-white f-12"
+                  >
+                    Review
+                  </Link>
+                  
+                </td>
+
+              </tr>
+            ))}
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+      </div>
+
+
+      <div class="col-xl-6 col-md-6">
+      <div class="Recent-Users card">
+        <div class="card-header">
+          <h5 class="card-title">
+            Recently Reviewed
+          </h5>
+        </div>
+        <div className="px-0 py-2 card-body">
+        <div className="table-responsive">
+          <table class="table">
+            <tbody>
+            {approvedTutorials &&
+            approvedTutorials.map((tutorial, index) => (
+              <tr
+                className={
+                  (index === currentIndex && currentType === "approved" ? "tableSelected" : "")
+                }
+                onClick={() => setActiveTutorial(tutorial, index, "approved")}
+                key={index}
+              >
+                <td>
+                  <h6 class="mb-1">
+                  {tutorial.title}
+                  </h6>
+                </td>
+
+                <td>
+                  <h6 class="mb-1">
+                  <i class="fa fa-circle text-c-green f-10 m-r-15"></i>
+                  {tutorial.targetedBranch}
+                  </h6>
+                </td>
+                <td>
+                  <h6 class="mb-1">
+                  <a href={tutorial.jiraLink}>Jira Link</a>
+                  
+                  </h6>
+                </td>
+
+                <td>
+                  <h6 class="mb-1">
+                  {(tutorial.accepted?"Approved":"Declined")}
+                  </h6>
+                </td>
+                <td>
+                <Link
+                    to={"/tpm/" + tutorial.id}
                     className="label theme-bg2 text-white f-12"
                   >
                     View
@@ -208,7 +225,8 @@ const TpmList = () => {
       </div>
     </div>
     </div>
-      </div>
+      </div>  
+      
     </div>
   );
 };

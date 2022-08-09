@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateTutorial, deleteTutorial } from "../slices/tutorials";
 import TutorialDataService from "../services/TutorialService";
+import DefaultComponent from "./Comments";
 
 const TpmView = (props) => {
   const initialTutorialState = {
@@ -10,7 +11,8 @@ const TpmView = (props) => {
     jiraLink: "",
     targetedBranch: "",
     description: "",
-    published: false
+    published: false,
+    accepted: false,
   };
   const [currentTutorial, setCurrentTutorial] = useState(initialTutorialState);
   const [message, setMessage] = useState("");
@@ -36,21 +38,22 @@ const TpmView = (props) => {
     setCurrentTutorial({ ...currentTutorial, [name]: value });
   };
 
-  const updateStatus = status => {
+  const updateStatus = (status1, status2) => {
     const data = {
       id: currentTutorial.id,
       title: currentTutorial.title,
       jiraLink: currentTutorial.jiraLink,
       targetedBranch: currentTutorial.targetedBranch,
       description: currentTutorial.description,
-      published: status
+      published: status1,
+      accepted: status2
     };
 
     dispatch(updateTutorial({ id: currentTutorial.id, data }))
       .unwrap()
       .then(response => {
         console.log(response);
-        setCurrentTutorial({ ...currentTutorial, published: status });
+        setCurrentTutorial({ ...currentTutorial, published: status1, accepted: status2 });
         setMessage("The status was updated successfully!");
       })
       .catch(e => {
@@ -74,7 +77,7 @@ const TpmView = (props) => {
     dispatch(deleteTutorial({ id: currentTutorial.id }))
       .unwrap()
       .then(() => {
-        props.history.push("/tpm");
+        props.history.push("/tutorials");
       })
       .catch(e => {
         console.log(e);
@@ -84,20 +87,12 @@ const TpmView = (props) => {
   return (
     <div>
       {currentTutorial ? (
-        <div className="edit-form">
-          <h4>Tutorial</h4>
+        <div className="row">
+          <div className="col-xl-6 col-md-6">
+          <div className="edit-form">
+          <h4>{currentTutorial.title}</h4>
           <form>
-            <div className="form-group">
-              <label htmlFor="title">Title</label>
-              <input
-                type="text"
-                className="form-control"
-                id="title"
-                name="title"
-                value={currentTutorial.title}
-                onChange={handleInputChange}
-              />
-            </div>
+            
             <div className="form-group">
               <label htmlFor="jiraLink">Jira Link</label>
               <input
@@ -131,40 +126,50 @@ const TpmView = (props) => {
                 onChange={handleInputChange}
               />
             </div>
-
-            <div className="form-group">
-              <label>
-                <strong>Status:</strong>
-              </label>
-              {currentTutorial.published ? "Published" : "Pending"}
-            </div>
           </form>
-         
-          
           {currentTutorial.published ? (
             ""
           ) : (
             <button
-            type="submit"
-            className="badge badge-success"
-            onClick={updateContent}
-          >
-            Update
-          </button>
+              className="badge badge-primary mr-2"
+              onClick={() => updateStatus(true, true)}
+            >
+              Approve
+            </button>
+
           )}
 
-        <button className="badge badge-danger mr-2" onClick={removeTutorial}>
-            Delete
-          </button>
+        {currentTutorial.published ? (
+                    ""
+                  ) : (
+                    <button
+                      className="badge badge-danger mr-2"
+                      onClick={() => updateStatus(true, false)}
+                    >
+                      Decline
+                    </button>
+
+          )}    
           
+
           <p>{message}</p>
+
+        </div>
+        </div>
+
+        <div className="col-xl-6 col-md-6"> 
+        <DefaultComponent tutorial={currentTutorial}  view={"Tpm"}/>
+        </div>
+        
+
         </div>
       ) : (
         <div>
           <br />
-          <p>Please click on a Tutorial...</p>
+          <p>Please click on a Request...</p>
         </div>
       )}
+      
     </div>
   );
 };

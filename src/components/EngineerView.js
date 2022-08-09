@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateTutorial, deleteTutorial } from "../slices/tutorials";
 import TutorialDataService from "../services/TutorialService";
+import DefaultComponent from "./Comments";
 
 const EngineerView = (props) => {
   const initialTutorialState = {
@@ -10,7 +11,8 @@ const EngineerView = (props) => {
     jiraLink: "",
     targetedBranch: "",
     description: "",
-    published: false
+    published: false,
+    message: []
   };
   const [currentTutorial, setCurrentTutorial] = useState(initialTutorialState);
   const [message, setMessage] = useState("");
@@ -36,28 +38,6 @@ const EngineerView = (props) => {
     setCurrentTutorial({ ...currentTutorial, [name]: value });
   };
 
-  const updateStatus = status => {
-    const data = {
-      id: currentTutorial.id,
-      title: currentTutorial.title,
-      jiraLink: currentTutorial.jiraLink,
-      targetedBranch: currentTutorial.targetedBranch,
-      description: currentTutorial.description,
-      published: status
-    };
-
-    dispatch(updateTutorial({ id: currentTutorial.id, data }))
-      .unwrap()
-      .then(response => {
-        console.log(response);
-        setCurrentTutorial({ ...currentTutorial, published: status });
-        setMessage("The status was updated successfully!");
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
-
   const updateContent = () => {
     dispatch(updateTutorial({ id: currentTutorial.id, data: currentTutorial }))
       .unwrap()
@@ -74,7 +54,7 @@ const EngineerView = (props) => {
     dispatch(deleteTutorial({ id: currentTutorial.id }))
       .unwrap()
       .then(() => {
-        props.history.push("/tutorials");
+        props.history.push("/engineer");
       })
       .catch(e => {
         console.log(e);
@@ -84,20 +64,13 @@ const EngineerView = (props) => {
   return (
     <div>
       {currentTutorial ? (
+       <div className="row">
+
+        <div className="col-xl-6 col-md-6">
         <div className="edit-form">
-          <h4>Tutorial</h4>
+          <h4>{currentTutorial.title}</h4>
           <form>
-            <div className="form-group">
-              <label htmlFor="title">Title</label>
-              <input
-                type="text"
-                className="form-control"
-                id="title"
-                name="title"
-                value={currentTutorial.title}
-                onChange={handleInputChange}
-              />
-            </div>
+          
             <div className="form-group">
               <label htmlFor="jiraLink">Jira Link</label>
               <input
@@ -131,33 +104,51 @@ const EngineerView = (props) => {
                 onChange={handleInputChange}
               />
             </div>
-          </form>
 
-           
+            <div className="form-group">
+              <label>
+                <strong>Status:</strong>
+              </label>
+              {currentTutorial.published ? "Published" : "Pending"}
+            </div>
+          </form>
+         
+          
+          
           {currentTutorial.published ? (
-            <button
-              className="badge badge-primary mr-2"
-              onClick={() => updateStatus(false)}
-            >
-              Dis Approve
-            </button>
+            ""
           ) : (
             <button
-              className="badge badge-primary mr-2"
-              onClick={() => updateStatus(true)}
-            >
-              Approve
-            </button>
+            type="submit"
+            className="badge badge-success"
+            onClick={updateContent}
+          >
+            Update
+          </button>
           )}
 
+            
+
+        <button className="badge badge-danger mr-2" onClick={removeTutorial}>
+            Delete
+          </button>
+          
           <p>{message}</p>
         </div>
+        </div>
+
+        <div className="col-xl-6 col-md-6">
+        <DefaultComponent tutorial={currentTutorial} view={"Engineer"} />
+        </div>
+        
+       </div>
       ) : (
         <div>
           <br />
-          <p>Please click on a Request...</p>
+          <p>Please click on a Tutorial...</p>
         </div>
       )}
+      
     </div>
   );
 };

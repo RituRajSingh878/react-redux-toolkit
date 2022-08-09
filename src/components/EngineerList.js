@@ -96,20 +96,20 @@ const EngineerList = () => {
       <div class="Recent-Users card">
         <div class="card-header">
           <h5 class="card-title">
-            Recent Request
+            Recent Review
           </h5>
         </div>
         <div className="px-0 py-2 card-body">
         <div className="table-responsive">
           <table class="table">
             <tbody>
-            {nonApprovedTutorials &&
-            nonApprovedTutorials.map((tutorial, index) => (
+            {approvedTutorials &&
+            approvedTutorials.map((tutorial, index) => (
               <tr
                 className={
-                  (index === currentIndex && currentType === "nonApproved" ? "tableSelected" : "")
+                  (index === currentIndex && currentType === "approved" ? "tableSelected" : "")
                 }
-                onClick={() => setActiveTutorial(tutorial, index, "nonApproved")}
+                onClick={() => setActiveTutorial(tutorial, index, "approved")}
                 key={index}
               >
                 <td>
@@ -130,12 +130,20 @@ const EngineerList = () => {
                   
                   </h6>
                 </td>
+
+                <td>
+                  <h6 class="mb-1">
+                  <i class="fa fa-circle text-c-green f-10 m-r-15"></i>
+                  {(tutorial.accepted?"Approved":"Declined")}
+                  </h6>
+                </td>
+                
                 <td>
                 <Link
                     to={"/engineer/" + tutorial.id}
-                    className="label theme-bg text-white f-12"
+                    className="label theme-bg2 text-white f-12"
                   >
-                    Approve
+                    View
                   </Link>
                   
                 </td>
@@ -147,27 +155,29 @@ const EngineerList = () => {
       </div>
     </div>
     </div>
-      </div>
+      </div> 
+
+
 
 
       <div class="col-xl-6 col-md-6">
       <div class="Recent-Users card">
         <div class="card-header">
           <h5 class="card-title">
-            Recently Approved
+            Recently Requested
           </h5>
         </div>
         <div className="px-0 py-2 card-body">
         <div className="table-responsive">
           <table class="table">
             <tbody>
-            {approvedTutorials &&
-            approvedTutorials.map((tutorial, index) => (
+            {nonApprovedTutorials &&
+            nonApprovedTutorials.map((tutorial, index) => (
               <tr
                 className={
-                  (index === currentIndex && currentType === "approved" ? "tableSelected" : "")
+                  (index === currentIndex && currentType === "nonApproved" ? "tableSelected" : "")
                 }
-                onClick={() => setActiveTutorial(tutorial, index, "approved")}
+                onClick={() => setActiveTutorial(tutorial, index, "nonApproved")}
                 key={index}
               >
                 <td>
@@ -205,8 +215,7 @@ const EngineerList = () => {
       </div>
     </div>
     </div>
-      </div>  
-      
+      </div>
     </div>
   );
 };

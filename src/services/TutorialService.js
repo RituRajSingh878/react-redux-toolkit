@@ -14,6 +14,7 @@ const create = data => {
 };
 
 const update = (id, data) => {
+  console.log(data);
   return http.put(`/tutorials/${id}`, data);
 };
 
@@ -29,6 +30,10 @@ const findByTitle = title => {
   return http.get(`/tutorials?title=${title}`);
 };
 
+const notify = data => {
+  return http.post("/tutorials/notify", data);
+}
+
 const TutorialService = {
   getAll,
   get,
@@ -36,7 +41,8 @@ const TutorialService = {
   update,
   remove,
   removeAll,
-  findByTitle
+  findByTitle,
+  notify
 };
 
 export default TutorialService;

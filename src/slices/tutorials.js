@@ -5,8 +5,8 @@ const initialState = [];
 
 export const createTutorial = createAsyncThunk(
   "tutorials/create",
-  async ({ title, description, jiraLink, targetedBranch}) => {
-    const res = await TutorialDataService.create({ title, description, jiraLink, targetedBranch });
+  async ({ title, description, jiraLink, targetedBranch, message}) => {
+    const res = await TutorialDataService.create({ title, description, jiraLink, targetedBranch, message });
     return res.data;
   }
 );
@@ -47,6 +47,14 @@ export const findTutorialsByTitle = createAsyncThunk(
   "tutorials/findByTitle",
   async ({ title }) => {
     const res = await TutorialDataService.findByTitle(title);
+    return res.data;
+  }
+);
+
+export const notifyTutorial = createAsyncThunk(
+  "tutorials/notify",
+  async ({data}) => {
+    const res = await TutorialDataService.notify(data);
     return res.data;
   }
 );

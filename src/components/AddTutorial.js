@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createTutorial } from "../slices/tutorials";
+import { Link } from "react-router-dom";
 
 const AddTutorial = () => {
   const initialTutorialState = {
@@ -9,7 +10,8 @@ const AddTutorial = () => {
     description: "",
     jiraLink: "",
     targetedBranch: "",
-    published: false
+    published: false,
+    message: []
   };
   const [tutorial, setTutorial] = useState(initialTutorialState);
   const [submitted, setSubmitted] = useState(false);
@@ -22,9 +24,9 @@ const AddTutorial = () => {
   };
 
   const saveTutorial = () => {
-    const { title, description, jiraLink, targetedBranch } = tutorial;
+    const { title, description, jiraLink, targetedBranch, message } = tutorial;
 
-    dispatch(createTutorial({ title, description, jiraLink, targetedBranch }))
+    dispatch(createTutorial({ title, description, jiraLink, targetedBranch, message }))
       .unwrap()
       .then(data => {
         console.log(data);
@@ -34,7 +36,8 @@ const AddTutorial = () => {
           description: data.description,
           jiraLink: data.jiraLink,
           targetedBranch: data.targetedBranch,
-          published: data.published
+          published: data.published,
+          message: data.message
         });
         setSubmitted(true);
       })
@@ -53,9 +56,12 @@ const AddTutorial = () => {
       {submitted ? (
         <div>
           <h4>You submitted successfully!</h4>
-          <button className="btn btn-success" onClick={newTutorial}>
-            Add
-          </button>
+          <Link
+                to={"/engineer/"}
+                    className="label theme-bg text-white f-12"
+                  >
+                    Okay
+            </Link>
         </div>
       ) : (
         <div>
